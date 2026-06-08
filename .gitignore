@@ -1,0 +1,20 @@
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData
+.RDataTmp
+
+# User-specific files
+.Ruserdata
+
+# R Environment Variables
+.Renviron
+
+# Mac
+.DS_Store
+
+# Jamovi module build
+build/
+*.jmo
