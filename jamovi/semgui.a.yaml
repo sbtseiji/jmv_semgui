@@ -1,0 +1,172 @@
+---
+name: SemGui
+title: Graphical SEM
+menuGroup: Factor
+menuSubgroup: SEM
+menuTitle: Graphical SEM
+menuSubtitle: CFA, Path Models, Full SEM
+version: '1.0.0'
+jas: '1.2'
+
+description:
+    main: >-
+        A graphical user interface for structural equation modeling.
+        Supports CFA, path models, full SEM, higher-order factors,
+        and bifactor models.
+
+options:
+    - name: data
+      type: Data
+
+    - name: vars
+      title: Observed Variables
+      type: Variables
+      suggested:
+        - continuous
+      permitted:
+        - numeric
+
+    - name: latentVars
+      title: Latent Variables
+      type: Array
+      default: []
+      template:
+        type: String
+        default: 'F1'
+
+    - name: modelSpec
+      title: Model Specification (JSON)
+      type: String
+      default: '{"nodes":[],"edges":[]}'
+      hidden: true
+
+    - name: estimator
+      title: Estimator
+      type: List
+      options:
+        - name: ml
+          title: ML
+        - name: mlr
+          title: MLR (Robust)
+        - name: mlm
+          title: MLM
+        - name: wlsmv
+          title: WLSMV
+        - name: uls
+          title: ULS
+      default: ml
+
+    - name: missing
+      title: Missing Data
+      type: List
+      options:
+        - name: fiml
+          title: Full Information ML
+        - name: listwise
+          title: Listwise deletion
+      default: fiml
+
+    - name: identification
+      title: Constraints
+      type: List
+      options:
+        - name: variance
+          title: Fix factor variance to 1
+        - name: marker
+          title: Fix first loading to 1
+      default: variance
+
+    - name: testStats
+      title: Test statistics
+      type: Bool
+      default: true
+
+    - name: ci
+      title: Confidence intervals
+      type: Bool
+      default: false
+
+    - name: ciWidth
+      title: Confidence interval width (%)
+      type: Number
+      default: 95
+      min: 50
+      max: 99.9
+
+    - name: std
+      title: Standardized estimates
+      type: Bool
+      default: false
+
+    - name: hideResiduals
+      title: Hide residuals
+      type: Bool
+      default: true
+
+    - name: showParamTable
+      title: Show parameter table
+      type: Bool
+      default: false
+
+    - name: fitChiSq
+      title: χ² test
+      type: Bool
+      default: true
+
+    - name: fitCFI
+      title: CFI
+      type: Bool
+      default: true
+
+    - name: fitTLI
+      title: TLI
+      type: Bool
+      default: true
+
+    - name: fitSRMR
+      title: SRMR
+      type: Bool
+      default: false
+
+    - name: fitRMSEA
+      title: RMSEA
+      type: Bool
+      default: true
+
+    - name: fitAIC
+      title: AIC
+      type: Bool
+      default: false
+
+    - name: fitBIC
+      title: BIC
+      type: Bool
+      default: false
+
+    - name: modIndices
+      title: Modification indices
+      type: Bool
+      default: false
+
+    - name: modIndicesThreshold
+      title: Highlight above
+      type: Number
+      default: 3
+      min: 0
+
+    - name: residCov
+      title: Residual covariances
+      type: Bool
+      default: false
+
+    - name: residCovThreshold
+      title: Highlight above
+      type: Number
+      default: 0.1
+      min: 0
+
+    - name: showSyntax
+      title: Show lavaan syntax
+      type: Bool
+      default: false
+...

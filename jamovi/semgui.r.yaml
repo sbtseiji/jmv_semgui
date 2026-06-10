@@ -1,0 +1,198 @@
+---
+name: SemGui
+title: Graphical SEM
+jrs: '1.1'
+
+items:
+    - name: diagram
+      title: Path Diagram Editor
+      type: Html
+      clearWith: []
+
+    - name: modelFit
+      title: Model Fit
+      type: Group
+      items:
+        - name: test
+          title: Fit tests
+          type: Table
+          rows: 1
+          visible: (fitChiSq)
+          clearWith:
+            - vars
+            - modelSpec
+            - estimator
+            - missing
+          columns:
+            - name: chi
+              title: χ²
+              type: number
+              format: zto
+            - name: df
+              title: df
+              type: integer
+            - name: p
+              title: p
+              type: number
+              format: zto,pvalue
+
+        - name: fitMeasures
+          title: Fit indices
+          type: Table
+          rows: 1
+          visible: (fitCFI || fitTLI || fitSRMR || fitRMSEA || fitAIC || fitBIC)
+          clearWith:
+            - vars
+            - modelSpec
+            - estimator
+            - missing
+          columns:
+            - name: cfi
+              title: CFI
+              type: number
+              visible: (fitCFI)
+            - name: tli
+              title: TLI
+              type: number
+              visible: (fitTLI)
+            - name: srmr
+              title: SRMR
+              type: number
+              visible: (fitSRMR)
+            - name: rmsea
+              title: RMSEA
+              type: number
+              visible: (fitRMSEA)
+            - name: rmseaLower
+              title: Lower
+              type: number
+              superTitle: RMSEA 90% CI
+              visible: (fitRMSEA)
+            - name: rmseaUpper
+              title: Upper
+              type: number
+              superTitle: RMSEA 90% CI
+              visible: (fitRMSEA)
+            - name: aic
+              title: AIC
+              type: number
+              visible: (fitAIC)
+            - name: bic
+              title: BIC
+              type: number
+              visible: (fitBIC)
+
+    - name: parameters
+      title: Parameter Estimates
+      type: Table
+      visible: (showParamTable)
+      rows: 0
+      clearWith:
+        - vars
+        - modelSpec
+        - estimator
+        - missing
+        - std
+        - ci
+        - ciWidth
+        - hideResiduals
+      columns:
+        - name: label
+          title: Label
+          type: text
+        - name: lhs
+          title: LHS
+          type: text
+        - name: op
+          title: Type
+          type: text
+        - name: rhs
+          title: RHS
+          type: text
+        - name: est
+          title: Estimate
+          type: number
+          format: zto
+        - name: se
+          title: SE
+          type: number
+          format: zto
+          visible: (testStats)
+        - name: z
+          title: z
+          type: number
+          format: zto
+          visible: (testStats)
+        - name: p
+          title: p
+          type: number
+          format: zto,pvalue
+          visible: (testStats)
+        - name: ciLower
+          title: Lower (95%CI)
+          type: number
+          format: zto
+          visible: (ci)
+        - name: ciUpper
+          title: Upper (95%CI)
+          type: number
+          format: zto
+          visible: (ci)
+        - name: stdAll
+          title: Std. Estimate
+          type: number
+          format: zto
+          visible: (std)
+
+    - name: modIndices
+      title: Modification Indices
+      type: Table
+      visible: (modIndices)
+      rows: 0
+      clearWith:
+        - vars
+        - modelSpec
+        - estimator
+        - missing
+      columns:
+        - name: lhs
+          title: LHS
+          type: text
+        - name: op
+          title: Type
+          type: text
+        - name: rhs
+          title: RHS
+          type: text
+        - name: mi
+          title: MI
+          type: number
+          format: zto
+        - name: epc
+          title: EPC
+          type: number
+          format: zto
+
+    - name: residCov
+      title: Residual Covariances
+      type: Table
+      visible: (residCov)
+      rows: 0
+      clearWith:
+        - vars
+        - modelSpec
+        - estimator
+        - missing
+      columns:
+        - name: var
+          title: ''
+          type: text
+
+    - name: lavaanCode
+      title: lavaan Model Syntax
+      type: Html
+      visible: (showSyntax)
+      clearWith:
+        - vars
+        - modelSpec
+...

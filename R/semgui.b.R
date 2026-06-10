@@ -1,0 +1,413 @@
+
+# This file is a generated template, your changes will not be overwritten
+
+
+SemGuiClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
+    "SemGuiClass",
+    inherit = SemGuiBase,
+    private = list(
+
+        .run = function() {
+
+            vars       <- self$options$vars
+            modelSpec  <- self$options$modelSpec
+            latentVars <- self$options$latentVars
+
+            estimates <- NULL
+
+            if (length(vars) > 0) {
+                spec <- tryCatch(
+                    jsonlite::fromJSON(modelSpec, simplifyVector = FALSE),
+                    error = function(e) NULL
+                )
+
+                if (!is.null(spec) && length(spec$edges) > 0) {
+                    lavaanResult <- private$.specToLavaan(spec)
+
+                    if (!is.null(lavaanResult)) {
+                        lavaanModel <- lavaanResult$syntax
+                        safeToLabel <- lavaanResult$safeToLabel
+
+                        data      <- self$data
+                        estimator <- toupper(self$options$estimator)
+                        missing   <- self$options$missing
+                        std.lv    <- self$options$identification == "variance"
+
+                        fit <- tryCatch(
+                            lavaan::sem(
+                                model     = lavaanModel,
+                                data      = data,
+                                estimator = estimator,
+                                missing   = missing,
+                                std.lv    = std.lv
+                            ),
+                            error = function(e) NULL
+                        )
+
+                        if (!is.null(fit) && lavaan::lavInspect(fit, "converged")) {
+                            estimates <- lavaan::parameterEstimates(
+                                fit,
+                                standardized = TRUE,
+                                ci           = self$options$ci,
+                                level        = self$options$ciWidth / 100
+                            )
+                            # Reverse-map ASCII proxies back to original (e.g. Japanese) labels
+                            if (length(safeToLabel) > 0) {
+                                mapBack <- function(x) {
+                                    sapply(x, function(v) {
+                                        if (!is.null(safeToLabel[[v]])) safeToLabel[[v]] else v
+                                    }, USE.NAMES = FALSE)
+                                }
+                                estimates$lhs <- mapBack(estimates$lhs)
+                                estimates$rhs <- mapBack(estimates$rhs)
+                            }
+                            latentLabels <- sapply(
+                                Filter(function(n) identical(n$type, "latent"), spec$nodes),
+                                function(n) n$label
+                            )
+                            private$.populateFit(fit)
+                            private$.populateParameters(fit, estimates, latentLabels)
+                            if (isTRUE(self$options$modIndices))
+                                private$.populateModIndices(fit, safeToLabel)
+                            if (isTRUE(self$options$residCov))
+                                private$.populateResidCov(fit, safeToLabel)
+                            if (isTRUE(self$options$showSyntax)) {
+                                header <- ""
+                                if (length(safeToLabel) > 0) {
+                                    mapping <- paste(
+                                        sapply(names(safeToLabel), function(s)
+                                            paste0("# ", s, ' = "', safeToLabel[[s]], '"')),
+                                        collapse = "\n"
+                                    )
+                                    note <- .("Non-ASCII variable names are replaced as above to prevent lavaan errors.")
+                                    header <- paste0(mapping, "\n# ", note, "\n\n")
+                                }
+                                full_text <- paste0(header, lavaanModel)
+                                escaped <- gsub("&", "&amp;", full_text, fixed = TRUE)
+                                escaped <- gsub("<", "&lt;",  escaped,   fixed = TRUE)
+                                self$results$lavaanCode$setContent(
+                                    paste0('<pre style="font-family:monospace;font-size:13px;',
+                                           'padding:8px;background:#f8f8f8;',
+                                           'border:1px solid #ddd;border-radius:4px;">',
+                                           escaped, '</pre>')
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            # Render editor (always, with estimates when available)
+            private$.renderEditor(vars, modelSpec, latentVars, estimates)
+        },
+
+        # JSON model spec → lavaan syntax
+        # Unified "regression" type: auto-detects loading vs regression from node types
+        .specToLavaan = function(spec) {
+            nodes <- spec$nodes
+            edges <- spec$edges
+
+            if (length(nodes) == 0 || length(edges) == 0) return(NULL)
+
+            nodeMap <- stats::setNames(
+                lapply(nodes, function(n) n),
+                sapply(nodes, function(n) n$id)
+            )
+
+            # lavaan's parser only handles ASCII identifiers.
+            # Map non-ASCII latent variable names to safe ASCII proxies;
+            # reverse-map after getting parameterEstimates().
+            labelToSafe <- list()
+            safeToLabel <- list()
+            safeIdx     <- 0L
+            for (n in nodes) {
+                if (!identical(n$type, "latent")) next
+                lbl <- n$label
+                if (!grepl("^[A-Za-z][A-Za-z0-9._]*$", lbl)) {
+                    safeIdx <- safeIdx + 1L
+                    safe <- paste0("LVSEM", safeIdx)
+                    labelToSafe[[lbl]] <- safe
+                    safeToLabel[[safe]] <- lbl
+                }
+            }
+
+            sn <- function(node) {
+                lbl <- node$label
+                if (identical(node$type, "latent") && !is.null(labelToSafe[[lbl]]))
+                    labelToSafe[[lbl]]
+                else
+                    lbl
+            }
+
+            loadings    <- list()
+            regressions <- list()
+            covariances <- character(0)
+
+            # Prepend fixed constraint to a term if edge$constraint is set
+            constrain <- function(term, edge) {
+                cv <- if (!is.null(edge$constraint)) trimws(as.character(edge$constraint)) else ""
+                if (nzchar(cv)) paste0(cv, "*", term) else term
+            }
+
+            for (edge in edges) {
+                fromNode <- nodeMap[[edge$from]]
+                toNode   <- nodeMap[[edge$to]]
+                if (is.null(fromNode) || is.null(toNode)) next
+
+                fl <- sn(fromNode)
+                tl <- sn(toNode)
+
+                if (edge$type == "loading") {
+                    if (is.null(loadings[[fl]])) loadings[[fl]] <- character(0)
+                    loadings[[fl]] <- c(loadings[[fl]], constrain(tl, edge))
+
+                } else if (edge$type == "regression") {
+                    if (identical(fromNode$type, "latent") && identical(toNode$type, "observed")) {
+                        # latent → observed regression: treat as loading (=~) for backward compat
+                        if (is.null(loadings[[fl]])) loadings[[fl]] <- character(0)
+                        loadings[[fl]] <- c(loadings[[fl]], constrain(tl, edge))
+                    } else {
+                        # latent→latent structural path (~), or observed→anything (~)
+                        if (is.null(regressions[[tl]])) regressions[[tl]] <- character(0)
+                        regressions[[tl]] <- c(regressions[[tl]], constrain(fl, edge))
+                    }
+
+                } else if (edge$type == "covariance") {
+                    if (fromNode$label != toNode$label) {
+                        covariances <- c(covariances, paste0(fl, " ~~ ", constrain(tl, edge)))
+                    }
+                }
+            }
+
+            lines <- character(0)
+            for (lhs in names(loadings)) {
+                lines <- c(lines, paste0(lhs, " =~ ", paste(loadings[[lhs]], collapse = " + ")))
+            }
+            for (lhs in names(regressions)) {
+                lines <- c(lines, paste0(lhs, " ~ ", paste(regressions[[lhs]], collapse = " + ")))
+            }
+            lines <- c(lines, covariances)
+
+            if (length(lines) == 0) return(NULL)
+            list(syntax = paste(lines, collapse = "\n"), safeToLabel = safeToLabel)
+        },
+
+        # Model fit tables (CFA-style: separate test and fit measures tables)
+        .populateFit = function(fit) {
+            opts <- self$options
+            fm   <- lavaan::fitMeasures(fit)
+
+            if (opts$fitChiSq) {
+                self$results$modelFit$test$setRow(rowNo = 1, values = list(
+                    chi = as.numeric(fm["chisq"]),
+                    df  = as.integer(fm["df"]),
+                    p   = as.numeric(fm["pvalue"])
+                ))
+            }
+
+            if (opts$fitCFI || opts$fitTLI || opts$fitSRMR ||
+                opts$fitRMSEA || opts$fitAIC || opts$fitBIC) {
+                self$results$modelFit$fitMeasures$setRow(rowNo = 1, values = list(
+                    cfi        = as.numeric(fm["cfi"]),
+                    tli        = as.numeric(fm["tli"]),
+                    srmr       = as.numeric(fm["srmr"]),
+                    rmsea      = as.numeric(fm["rmsea"]),
+                    rmseaLower = as.numeric(fm["rmsea.ci.lower"]),
+                    rmseaUpper = as.numeric(fm["rmsea.ci.upper"]),
+                    aic        = as.numeric(fm["aic"]),
+                    bic        = as.numeric(fm["bic"])
+                ))
+            }
+        },
+
+        # Parameter estimates table
+        .populateParameters = function(fit, pe = NULL, latentLabels = character(0)) {
+            opts <- self$options
+            if (is.null(pe)) {
+                pe <- lavaan::parameterEstimates(
+                    fit,
+                    standardized = opts$std,
+                    ci           = opts$ci,
+                    level        = opts$ciWidth / 100
+                )
+            }
+
+            lat_names <- lavaan::lavNames(fit, type = "lv")
+            tbl <- self$results$parameters
+
+            for (i in seq_len(nrow(pe))) {
+                row <- pe[i, ]
+                op  <- as.character(row$op)
+                lhs <- as.character(row$lhs)
+                rhs <- as.character(row$rhs)
+
+                show <- if (op %in% c("=~", "~")) {
+                    TRUE
+                } else if (op == "~~") {
+                    if (lhs == rhs) !opts$hideResiduals else TRUE
+                } else if (op == "~1") {
+                    FALSE
+                } else {
+                    TRUE
+                }
+
+                if (!show) next
+
+                opDisplay <- switch(op,
+                    "=~" = "->",
+                    "~"  = "->",
+                    "~~" = if (lhs == rhs) .("var") else "<->",
+                    "~1" = .("mean"),
+                    op
+                )
+
+                tbl$addRow(rowKey=i, values=list(
+                    label   = if (!is.null(row$label) && !is.na(row$label)) as.character(row$label) else "",
+                    lhs     = lhs,
+                    op      = opDisplay,
+                    rhs     = rhs,
+                    est     = as.numeric(row$est),
+                    se      = as.numeric(row$se),
+                    z       = as.numeric(row$z),
+                    p       = as.numeric(row$pvalue),
+                    ciLower = if ("ci.lower" %in% names(pe)) as.numeric(row$ci.lower) else NA_real_,
+                    ciUpper = if ("ci.upper" %in% names(pe)) as.numeric(row$ci.upper) else NA_real_,
+                    stdAll  = if ("std.all"  %in% names(pe)) as.numeric(row$std.all)  else NA_real_
+                ))
+            }
+        },
+
+        # Modification indices table
+        .populateModIndices = function(fit, safeToLabel = list()) {
+            threshold <- self$options$modIndicesThreshold
+            mi <- tryCatch(
+                lavaan::modificationIndices(fit, sort. = TRUE),
+                error = function(e) NULL
+            )
+            if (is.null(mi) || nrow(mi) == 0) return()
+
+            mi <- mi[mi$mi >= threshold, , drop = FALSE]
+            if (nrow(mi) == 0) return()
+
+            mapBack <- function(x) {
+                sapply(x, function(v) {
+                    if (!is.null(safeToLabel[[v]])) safeToLabel[[v]] else v
+                }, USE.NAMES = FALSE)
+            }
+            mi$lhs <- mapBack(mi$lhs)
+            mi$rhs <- mapBack(mi$rhs)
+
+            tbl <- self$results$modIndices
+            for (i in seq_len(nrow(mi))) {
+                row <- mi[i, ]
+                op  <- as.character(row$op)
+                opDisplay <- switch(op,
+                    "=~" = "->", "~" = "->", "~~" = "<->", op)
+                tbl$addRow(rowKey = i, values = list(
+                    lhs = as.character(row$lhs),
+                    op  = opDisplay,
+                    rhs = as.character(row$rhs),
+                    mi  = as.numeric(row$mi),
+                    epc = as.numeric(row$epc)
+                ))
+            }
+        },
+
+        # Residual correlation matrix
+        .populateResidCov = function(fit, safeToLabel = list()) {
+            threshold <- self$options$residCovThreshold
+            res <- tryCatch(
+                lavaan::residuals(fit, type = "cor")$cov,
+                error = function(e) NULL
+            )
+            if (is.null(res) || nrow(res) == 0) return()
+
+            mapBack <- function(x) {
+                sapply(x, function(v) {
+                    if (!is.null(safeToLabel[[v]])) safeToLabel[[v]] else v
+                }, USE.NAMES = FALSE)
+            }
+            rownames(res) <- mapBack(rownames(res))
+            colnames(res) <- mapBack(colnames(res))
+
+            vars <- rownames(res)
+            tbl  <- self$results$residCov
+
+            for (v in vars)
+                tbl$addColumn(name = v, title = v, type = "number", format = "zto")
+
+            for (i in seq_along(vars)) {
+                values <- list(var = vars[i])
+                for (j in seq_along(vars)) {
+                    values[[vars[j]]] <- if (j < i) as.numeric(res[i, j]) else NA_real_
+                }
+                tbl$addRow(rowKey = i, values = values)
+                for (j in seq_len(i - 1)) {
+                    if (!is.na(res[i, j]) && abs(res[i, j]) >= threshold)
+                        tbl$addFormat(rowKey = i, col = vars[j], jmvcore::Cell.NEGATIVE)
+                }
+            }
+        },
+
+        # Render the HTML path diagram editor
+        .renderEditor = function(vars, modelSpec, latentVars = "", estimates = NULL) {
+            varsJson <- jsonlite::toJSON(as.character(vars), auto_unbox = FALSE)
+
+            latentNames <- character(0)
+            if (length(latentVars) > 0) {
+                latentNames <- trimws(unlist(latentVars))
+                latentNames <- latentNames[nchar(latentNames) > 0]
+            }
+            latentJson <- jsonlite::toJSON(latentNames, auto_unbox = FALSE)
+
+            # Parameter estimates for diagram display
+            if (!is.null(estimates)) {
+                cols <- intersect(c("lhs","op","rhs","est","se","z","pvalue","std.all"),
+                                  names(estimates))
+                estimatesJson <- jsonlite::toJSON(
+                    estimates[, cols, drop = FALSE],
+                    auto_unbox = FALSE, na = "null"
+                )
+            } else {
+                estimatesJson <- "[]"
+            }
+
+            showStd       <- if (isTRUE(self$options$std))          "true" else "false"
+            hideResiduals <- if (isTRUE(self$options$hideResiduals)) "true" else "false"
+
+            html <- .EDITOR_HTML
+            html <- gsub("%%VARS%%",            varsJson,      html, fixed = TRUE)
+            html <- gsub("%%MODEL_SPEC%%",       modelSpec,     html, fixed = TRUE)
+            html <- gsub("%%LATENT_VARS%%",      latentJson,    html, fixed = TRUE)
+            html <- gsub("%%PARAM_ESTIMATES%%",  estimatesJson, html, fixed = TRUE)
+            html <- gsub("%%SHOW_STD%%",         showStd,       html, fixed = TRUE)
+            html <- gsub("%%HIDE_RESIDUALS%%",   hideResiduals, html, fixed = TRUE)
+
+            # Toolbar labels
+            html <- gsub("%%LABEL_LAYOUT%%",   .("Auto Layout"), html, fixed = TRUE)
+            html <- gsub("%%LABEL_SHOW_EST%%", .("Estimates"),   html, fixed = TRUE)
+
+            # Right-click menu labels (node and error node)
+            html <- gsub("%%LABEL_FIX_VALUE%%",         .("Fix value..."),      html, fixed = TRUE)
+            html <- gsub("%%LABEL_FIX_PARAM_TITLE%%",   .("Fix parameter"),     html, fixed = TRUE)
+            html <- gsub("%%LABEL_FIX_PARAM_ERR%%",     .("Enter a number."),   html, fixed = TRUE)
+            html <- gsub("%%LABEL_REMOVE_CONSTRAINT%%",  .("Remove constraint"), html, fixed = TRUE)
+            html <- gsub("%%LABEL_ADD_LOADING%%",    .("Add Loading"),    html, fixed = TRUE)
+            html <- gsub("%%LABEL_ADD_REGRESSION%%", .("Add Regression"), html, fixed = TRUE)
+            html <- gsub("%%LABEL_ADD_COVARIANCE%%", .("Add Covariance"), html, fixed = TRUE)
+            html <- gsub("%%LABEL_DELETE%%",         .("Delete"),         html, fixed = TRUE)
+            html <- gsub("%%LABEL_ERR_TOP%%",    .("Error above"), html, fixed = TRUE)
+            html <- gsub("%%LABEL_ERR_BOTTOM%%", .("Error below"), html, fixed = TRUE)
+            html <- gsub("%%LABEL_ERR_LEFT%%",   .("Error left"),  html, fixed = TRUE)
+            html <- gsub("%%LABEL_ERR_RIGHT%%",  .("Error right"), html, fixed = TRUE)
+
+            # Modal labels
+            html <- gsub("%%LABEL_OK%%",           .("OK"),                              html, fixed = TRUE)
+            html <- gsub("%%LABEL_CANCEL%%",       .("Cancel"),                          html, fixed = TRUE)
+            html <- gsub("%%LABEL_EDIT_NAME%%",    .("Edit variable name"),              html, fixed = TRUE)
+            html <- gsub("%%LABEL_NAME_CONFLICT%%", .("Name already used as observed variable."), html, fixed = TRUE)
+
+            self$results$diagram$setContent(html)
+        }
+    )
+)

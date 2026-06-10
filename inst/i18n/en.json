@@ -1,0 +1,261 @@
+{
+    "domain": "messages",
+    "locale_data": {
+        "messages": {
+            "": {
+                "domain": "messages",
+                "lang": "en",
+                "plural_forms": "nplurals=2; plural=(n!=1);"
+            },
+            "{\"nodes\":[],\"edges\":[]}": [
+                ""
+            ],
+            "%": [
+                ""
+            ],
+            "← Select variables in the left panel and build your model in the path diagram editor.": [
+                ""
+            ],
+            "A graphical user interface for structural equation modeling. Supports CFA, path models, full SEM, higher-order factors, and bifactor models.": [
+                ""
+            ],
+            "Add Covariance": [
+                ""
+            ],
+            "Add Loading": [
+                ""
+            ],
+            "Add nodes and paths in the editor.": [
+                ""
+            ],
+            "Add Regression": [
+                ""
+            ],
+            "AIC": [
+                ""
+            ],
+            "Auto Layout": [
+                ""
+            ],
+            "BIC": [
+                ""
+            ],
+            "Highlight above": [
+                ""
+            ],
+            "Show values above": [
+                ""
+            ],
+            "Cancel": [
+                ""
+            ],
+            "CFA, Path Models, Full SEM": [
+                ""
+            ],
+            "CFI": [
+                ""
+            ],
+            "Confidence interval width (%)": [
+                ""
+            ],
+            "Confidence intervals": [
+                ""
+            ],
+            "Constraints": [
+                ""
+            ],
+            "Delete": [
+                ""
+            ],
+            "mean": [
+                ""
+            ],
+            "var": [
+                ""
+            ],
+            "df": [
+                ""
+            ],
+            "Edit variable name": [
+                ""
+            ],
+            "Name already used as observed variable.": [
+                ""
+            ],
+            "Estimate": [
+                ""
+            ],
+            "Estimates": [
+                ""
+            ],
+            "Estimator": [
+                ""
+            ],
+            "F1": [
+                ""
+            ],
+            "Factor": [
+                ""
+            ],
+            "Fit indices": [
+                ""
+            ],
+            "Fit tests": [
+                ""
+            ],
+            "Fix factor variance to 1": [
+                ""
+            ],
+            "Fix first loading to 1": [
+                ""
+            ],
+            "Full Information ML": [
+                ""
+            ],
+            "Graphical SEM": [
+                ""
+            ],
+            "Hide residuals": [
+                ""
+            ],
+            "Index": [
+                ""
+            ],
+            "Label": [
+                ""
+            ],
+            "Latent Variables": [
+                ""
+            ],
+            "lavaan error: ": [
+                ""
+            ],
+            "lavaan Model Syntax": [
+                ""
+            ],
+            "LHS": [
+                ""
+            ],
+            "Listwise deletion": [
+                ""
+            ],
+            "Lower (95%CI)": [
+                ""
+            ],
+            "Missing Data": [
+                ""
+            ],
+            "ML": [
+                ""
+            ],
+            "MLM": [
+                ""
+            ],
+            "MLR (Robust)": [
+                ""
+            ],
+            "Model did not converge. Check model identification.": [
+                ""
+            ],
+            "Model Fit": [
+                ""
+            ],
+            "Model Fit Indices": [
+                ""
+            ],
+            "Model Specification (JSON)": [
+                ""
+            ],
+            "No valid paths defined.": [
+                ""
+            ],
+            "Observed Variables": [
+                ""
+            ],
+            "OK": [
+                ""
+            ],
+            "Type": [
+                ""
+            ],
+            "Options": [
+                ""
+            ],
+            "Output": [
+                ""
+            ],
+            "p (χ²)": [
+                ""
+            ],
+            "Parameter Estimates": [
+                ""
+            ],
+            "Path Diagram Editor": [
+                ""
+            ],
+            "RHS": [
+                ""
+            ],
+            "RMSEA": [
+                ""
+            ],
+            "RMSEA 90%CI lower": [
+                ""
+            ],
+            "RMSEA 90%CI upper": [
+                ""
+            ],
+            "SE": [
+                ""
+            ],
+            "SEM": [
+                ""
+            ],
+            "Show parameter table": [
+                ""
+            ],
+            "SRMR": [
+                ""
+            ],
+            "Standardized estimates": [
+                ""
+            ],
+            "Statistics": [
+                ""
+            ],
+            "Std. Estimate": [
+                ""
+            ],
+            "Test statistics": [
+                ""
+            ],
+            "Threshold": [
+                ""
+            ],
+            "TLI": [
+                ""
+            ],
+            "ULS": [
+                ""
+            ],
+            "Upper (95%CI)": [
+                ""
+            ],
+            "Value": [
+                ""
+            ],
+            "Width": [
+                ""
+            ],
+            "WLSMV": [
+                ""
+            ],
+            "χ² test": [
+                ""
+            ],
+            "追加": [
+                ""
+            ]
+        }
+    }
+}

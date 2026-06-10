@@ -1,0 +1,13 @@
+Package: semgui
+Type: Package
+Title: Graphical SEM for Jamovi
+Version: 0.1.0
+Author: Seiji Shibata
+Maintainer: Seiji Shibata <sbtseiji@users.noreply.github.com>
+Description: A graphical user interface for structural equation modeling in jamovi.
+    Supports CFA, path models, full SEM, higher-order factors, and bifactor models.
+    Models are specified by drawing path diagrams and fitted using lavaan.
+License: GPL-3.0
+Encoding: UTF-8
+LazyData: true
+Imports: jmvcore (>= 0.8.5), R6, lavaan, jsonlite

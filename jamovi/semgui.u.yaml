@@ -1,0 +1,200 @@
+title: Graphical SEM
+name: SemGui
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: VariableSupplier
+    persistentItems: false
+    stretchFactor: 1
+    children:
+      - type: TargetLayoutBox
+        label: Observed Variables
+        children:
+          - type: VariablesListBox
+            name: vars
+            isTarget: true
+            height: large
+      - type: TargetLayoutBox
+        label: Latent Variables
+        children:
+          - type: ListBox
+            name: latentVars
+            showColumnHeaders: false
+            fullRowSelect: true
+            stretchFactor: 1
+            height: large
+            addButton: 追加
+            template:
+              type: TextBox
+              format: string
+  - type: CollapseBox
+    label: Options
+    collapsed: true
+    stretchFactor: 1
+    children:
+      - type: LayoutBox
+        margin: large
+        cell:
+          column: 0
+          row: 0
+        children:
+          - type: ComboBox
+            name: estimator
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        cell:
+          column: 0
+          row: 1
+        children:
+          - type: Label
+            label: Missing Data
+            children:
+              - type: RadioButton
+                name: missing_fiml
+                optionName: missing
+                optionPart: fiml
+              - type: RadioButton
+                name: missing_listwise
+                optionName: missing
+                optionPart: listwise
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        cell:
+          column: 1
+          row: 1
+        children:
+          - type: Label
+            label: Constraints
+            children:
+              - type: RadioButton
+                name: identification_variance
+                optionName: identification
+                optionPart: variance
+              - type: RadioButton
+                name: identification_marker
+                optionName: identification
+                optionPart: marker
+  - type: CollapseBox
+    label: Model Fit
+    collapsed: false
+    stretchFactor: 1
+    children:
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        cell:
+          column: 0
+          row: 0
+        children:
+          - type: Label
+            label: Fit tests
+            children:
+              - type: CheckBox
+                name: fitChiSq
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        cell:
+          column: 1
+          row: 0
+        children:
+          - type: Label
+            label: Fit indices
+            children:
+              - type: CheckBox
+                name: fitCFI
+              - type: CheckBox
+                name: fitTLI
+              - type: CheckBox
+                name: fitSRMR
+              - type: CheckBox
+                name: fitRMSEA
+              - type: CheckBox
+                name: fitAIC
+              - type: CheckBox
+                name: fitBIC
+  - type: CollapseBox
+    label: Output
+    collapsed: false
+    stretchFactor: 1
+    children:
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        cell:
+          column: 0
+          row: 0
+        children:
+          - type: CheckBox
+            name: hideResiduals
+          - type: CheckBox
+            name: std
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        cell:
+          column: 1
+          row: 0
+        children:
+          - type: CheckBox
+            name: showParamTable
+            children:
+              - type: CheckBox
+                name: testStats
+                enable: (showParamTable)
+              - type: CheckBox
+                name: ci
+                enable: (showParamTable)
+                children:
+                  - type: TextBox
+                    name: ciWidth
+                    label: Width
+                    suffix: '%'
+                    format: number
+                    enable: (ci)
+  - type: CollapseBox
+    label: Additional Output
+    collapsed: true
+    stretchFactor: 1
+    children:
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        cell:
+          column: 0
+          row: 0
+        children:
+          - type: Label
+            label: Model modification
+            children:
+              - type: CheckBox
+                name: residCov
+                children:
+                  - type: TextBox
+                    name: residCovThreshold
+                    label: Highlight above
+                    format: number
+                    enable: (residCov)
+              - type: CheckBox
+                name: modIndices
+                children:
+                  - type: TextBox
+                    name: modIndicesThreshold
+                    label: Show values above
+                    format: number
+                    enable: (modIndices)
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        cell:
+          column: 1
+          row: 0
+        children:
+          - type: Label
+            label: Model syntax
+            children:
+              - type: CheckBox
+                name: showSyntax

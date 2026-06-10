@@ -1,0 +1,360 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2021-07-26 12:08:06+01000\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"Language: en\n"
+
+#: SemGui/options/modelSpec.default
+msgid "{\"nodes\":[],\"edges\":[]}"
+msgstr ""
+
+#: SemGui/ui[2][0][0]/ci/ciWidth.suffix
+msgid "%"
+msgstr ""
+
+#: R/semgui.b.R
+msgid ""
+"← Select variables in the left panel and build your model in the path "
+"diagram editor."
+msgstr ""
+
+#: package.description
+#: package/analyses/SemGui.description
+#: SemGui/options.description.main
+msgid ""
+"A graphical user interface for structural equation modeling. Supports CFA, "
+"path models, full SEM, higher-order factors, and bifactor models."
+msgstr ""
+
+#: R/semgui.b.R
+msgid "Add Covariance"
+msgstr ""
+
+#: R/semgui.b.R
+msgid "Add Loading"
+msgstr ""
+
+#: R/semgui.b.R
+msgid "Add nodes and paths in the editor."
+msgstr ""
+
+#: R/semgui.b.R
+msgid "Add Regression"
+msgstr ""
+
+#: SemGui/options/fitAIC.title
+msgid "AIC"
+msgstr ""
+
+#: R/semgui.b.R
+msgid "Auto Layout"
+msgstr ""
+
+#: SemGui/options/fitBIC.title
+msgid "BIC"
+msgstr ""
+
+#: SemGui/ui[4][0][0]/residCov/residCovThreshold.label
+msgid "Highlight above"
+msgstr ""
+
+#: SemGui/ui[4][1][0]/modIndices/modIndicesThreshold.label
+msgid "Show values above"
+msgstr ""
+
+#: R/semgui.b.R
+msgid "Cancel"
+msgstr ""
+
+#: package/analyses/SemGui.menuSubtitle
+#: SemGui/options.menuSubtitle
+msgid "CFA, Path Models, Full SEM"
+msgstr ""
+
+#: SemGui/options/fitCFI.title
+msgid "CFI"
+msgstr ""
+
+#: SemGui/options/ciWidth.title
+msgid "Confidence interval width (%)"
+msgstr ""
+
+#: SemGui/options/ci.title
+msgid "Confidence intervals"
+msgstr ""
+
+#: SemGui/options/identification.title
+#: SemGui/ui[1][2][0].label
+msgid "Constraints"
+msgstr ""
+
+#: R/semgui.b.R
+msgid "Delete"
+msgstr ""
+
+#: R/semgui.b.R
+msgid "mean"
+msgstr ""
+
+#: R/semgui.b.R
+msgid "var"
+msgstr ""
+
+#: R/semgui.b.R
+msgid "df"
+msgstr ""
+
+#: R/semgui.b.R
+msgid "Edit variable name"
+msgstr ""
+
+#: R/semgui.b.R
+msgid "Name already used as observed variable."
+msgstr ""
+
+#: SemGui/results/parameters.columns.title
+msgid "Estimate"
+msgstr ""
+
+#: R/semgui.b.R
+msgid "Estimates"
+msgstr ""
+
+#: SemGui/options/estimator.title
+msgid "Estimator"
+msgstr ""
+
+#: SemGui/options/latentVars.template.default
+msgid "F1"
+msgstr ""
+
+#: package/analyses/SemGui.menuGroup
+#: SemGui/options.menuGroup
+msgid "Factor"
+msgstr ""
+
+#: SemGui/ui[3][1][0].label
+msgid "Fit indices"
+msgstr ""
+
+#: SemGui/ui[3][0][0].label
+msgid "Fit tests"
+msgstr ""
+
+#: SemGui/options/identification/variance.title
+msgid "Fix factor variance to 1"
+msgstr ""
+
+#: SemGui/options/identification/marker.title
+msgid "Fix first loading to 1"
+msgstr ""
+
+#: SemGui/options/missing/fiml.title
+msgid "Full Information ML"
+msgstr ""
+
+#: package.title
+#: package/analyses/SemGui.title
+#: package/analyses/SemGui.menuTitle
+#: SemGui/options.title
+#: SemGui/options.menuTitle
+#: SemGui/ui.title
+#: SemGui/results.title
+msgid "Graphical SEM"
+msgstr ""
+
+#: SemGui/options/hideResiduals.title
+msgid "Hide residuals"
+msgstr ""
+
+#: SemGui/results/modelFit.columns.title
+msgid "Index"
+msgstr ""
+
+#: SemGui/results/parameters.columns.title
+msgid "Label"
+msgstr ""
+
+#: SemGui/options/latentVars.title
+#: SemGui/ui[0][1].label
+msgid "Latent Variables"
+msgstr ""
+
+#: R/semgui.b.R
+msgid "lavaan error: "
+msgstr ""
+
+#: SemGui/results/lavaanCode.title
+msgid "lavaan Model Syntax"
+msgstr ""
+
+#: SemGui/results/parameters.columns.title
+msgid "LHS"
+msgstr ""
+
+#: SemGui/options/missing/listwise.title
+msgid "Listwise deletion"
+msgstr ""
+
+#: SemGui/results/parameters.columns.title
+msgid "Lower (95%CI)"
+msgstr ""
+
+#: SemGui/options/missing.title
+#: SemGui/ui[1][1][0].label
+msgid "Missing Data"
+msgstr ""
+
+#: SemGui/options/estimator/ml.title
+msgid "ML"
+msgstr ""
+
+#: SemGui/options/estimator/mlm.title
+msgid "MLM"
+msgstr ""
+
+#: SemGui/options/estimator/mlr.title
+msgid "MLR (Robust)"
+msgstr ""
+
+#: R/semgui.b.R
+msgid "Model did not converge. Check model identification."
+msgstr ""
+
+#: SemGui/ui[3].label
+msgid "Model Fit"
+msgstr ""
+
+#: SemGui/results/modelFit.title
+msgid "Model Fit Indices"
+msgstr ""
+
+#: SemGui/options/modelSpec.title
+msgid "Model Specification (JSON)"
+msgstr ""
+
+#: R/semgui.b.R
+msgid "No valid paths defined."
+msgstr ""
+
+#: SemGui/options/vars.title
+#: SemGui/ui[0][0].label
+msgid "Observed Variables"
+msgstr ""
+
+#: R/semgui.b.R
+msgid "OK"
+msgstr ""
+
+#: SemGui/results/parameters.columns.title
+msgid "Type"
+msgstr ""
+
+#: SemGui/ui[1].label
+msgid "Options"
+msgstr ""
+
+#: SemGui/ui[2][1][0].label
+msgid "Output"
+msgstr ""
+
+#: R/semgui.b.R
+msgid "p (χ²)"
+msgstr ""
+
+#: SemGui/ui[2].label
+#: SemGui/results/parameters.title
+msgid "Parameter Estimates"
+msgstr ""
+
+#: SemGui/results/diagram.title
+msgid "Path Diagram Editor"
+msgstr ""
+
+#: SemGui/results/parameters.columns.title
+msgid "RHS"
+msgstr ""
+
+#: SemGui/options/fitRMSEA.title
+msgid "RMSEA"
+msgstr ""
+
+#: R/semgui.b.R
+msgid "RMSEA 90%CI lower"
+msgstr ""
+
+#: R/semgui.b.R
+msgid "RMSEA 90%CI upper"
+msgstr ""
+
+#: SemGui/results/parameters.columns.title
+msgid "SE"
+msgstr ""
+
+#: package/analyses/SemGui.menuSubgroup
+#: SemGui/options.menuSubgroup
+msgid "SEM"
+msgstr ""
+
+#: SemGui/options/showParamTable.title
+msgid "Show parameter table"
+msgstr ""
+
+#: SemGui/options/fitSRMR.title
+msgid "SRMR"
+msgstr ""
+
+#: SemGui/options/std.title
+msgid "Standardized estimates"
+msgstr ""
+
+#: SemGui/ui[2][0][0].label
+msgid "Statistics"
+msgstr ""
+
+#: SemGui/results/parameters.columns.title
+msgid "Std. Estimate"
+msgstr ""
+
+#: SemGui/options/testStats.title
+msgid "Test statistics"
+msgstr ""
+
+#: SemGui/results/modelFit.columns.title
+msgid "Threshold"
+msgstr ""
+
+#: SemGui/options/fitTLI.title
+msgid "TLI"
+msgstr ""
+
+#: SemGui/options/estimator/uls.title
+msgid "ULS"
+msgstr ""
+
+#: SemGui/results/parameters.columns.title
+msgid "Upper (95%CI)"
+msgstr ""
+
+#: SemGui/results/modelFit.columns.title
+msgid "Value"
+msgstr ""
+
+#: SemGui/ui[2][0][0]/ci/ciWidth.label
+msgid "Width"
+msgstr ""
+
+#: SemGui/options/estimator/wlsmv.title
+msgid "WLSMV"
+msgstr ""
+
+#: SemGui/options/fitChiSq.title
+msgid "χ² test"
+msgstr ""
+
+#: SemGui/ui[0][1]/latentVars.addButton
+msgid "追加"
+msgstr ""
