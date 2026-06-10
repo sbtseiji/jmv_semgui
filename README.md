@@ -19,15 +19,12 @@ A [Jamowi](https://www.jamovi.org/) module for structural equation modeling with
 
 ## Installation
 
-### From the Jamovi library (recommended)
+Download the latest `.jmo` file from the [Releases](../../releases) page, then install it as a sideloaded module:
 
-1. Open Jamovi and click the **⊞** button (top right)
-2. Go to **Modules → Jamovi Library**
-3. Search for `semgui` and install
-
-### Manual install from `.jmo` file
-
-Download the latest `.jmo` file from the [Releases](../../releases) page, then install via **Modules → Install from file** in Jamovi.
+1. Open Jamovi
+2. Click the **⊞** button (top right)
+3. Select **Install from file...**
+4. Choose the downloaded `.jmo` file
 
 ---
 
