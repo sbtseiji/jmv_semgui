@@ -59,3 +59,6 @@ man/
 npm-debug.log
 inst/doc
 tests/testthat/Rplots.pdf
+
+# private scripts (not for distribution)
+scripts/

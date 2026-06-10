@@ -109,7 +109,7 @@ s1 ~~ 0*s2
 
 ## Sample Data
 
-Example datasets (CSV) are available in the [`data/`](data/) directory. Download and open them directly in Jamovi to try out the module.
+Example datasets in Jamovi format (`.omv`) are available in the [`data/omv/`](data/omv/) directory. Download and open them directly in Jamovi to try out the module.
 
 ## Requirements
 
