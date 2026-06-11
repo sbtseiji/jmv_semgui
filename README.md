@@ -1,6 +1,6 @@
 # semgui — Graphical SEM for Jamovi
 
-A [Jamowi](https://www.jamovi.org/) module for structural equation modeling with a graphical path diagram editor. Models are specified by drawing paths on a canvas and fitted using [lavaan](https://lavaan.ugent.be/).
+A [Jamovi](https://www.jamovi.org/) module for structural equation modeling with a graphical path diagram editor. Models are specified by drawing paths on a canvas and fitted using [lavaan](https://lavaan.ugent.be/).
 
 ---
 
@@ -113,7 +113,7 @@ Example datasets in Jamovi format (`.omv`) are available in the [`data/omv/`](da
 
 ## Requirements
 
-- [Jamowi](https://www.jamovi.org/) 2.3 or later
+- [Jamovi](https://www.jamovi.org/) 2.3 or later
 - R packages: `lavaan`, `jsonlite`, `jmvcore`, `R6`
 
 ---
